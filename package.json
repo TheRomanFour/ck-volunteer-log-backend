@@ -1,0 +1,19 @@
+{
+  "name": "ck-volunteer-log-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bin/serve.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cpt-Shime/ck-volunteer-log-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cpt-Shime/ck-volunteer-log-backend/issues"
+  },
+  "homepage": "https://github.com/Cpt-Shime/ck-volunteer-log-backend#readme"
+}

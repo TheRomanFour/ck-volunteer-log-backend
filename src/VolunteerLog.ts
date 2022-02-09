@@ -1,10 +1,12 @@
-import {IJuiceApplication} from "@juice/juice/core/IJuiceApplication"
-import {ApplicationConfiguration} from "@juice/juice/core/decorators/ApplicationConfiguration";
-import {Juice} from "@juice/juice/Juice";
-import {LanguageModule} from "@juice/juice/modules/LanguageModule";
-import {ColoredConsoleLogger} from "@juice/juice/modules/logging/ColoredConsoleLogger";
-import {Networking} from "@juice/networking/Networking";
+import { IJuiceApplication } from "@juice/juice/core/IJuiceApplication";
+import { ApplicationConfiguration } from "@juice/juice/core/decorators/ApplicationConfiguration";
+import { Juice } from "@juice/juice/Juice";
+import { LanguageModule } from "@juice/juice/modules/LanguageModule";
+import { ColoredConsoleLogger } from "@juice/juice/modules/logging/ColoredConsoleLogger";
+import { Networking } from "@juice/networking/Networking";
 import { ApiRouteHandler } from './modules/ApiRouteHandler';
+import { Logging } from "@juice/juice/modules/logging/Logging";
+import { VolunteerService } from "./services/volunteer/VolunteerService";
 
 @ApplicationConfiguration({
     key: "ck-volunteer",
@@ -15,17 +17,31 @@ import { ApiRouteHandler } from './modules/ApiRouteHandler';
 
 export class VolunteerLog implements IJuiceApplication {
     options?: any;
+
     async configure(): Promise<boolean> {
-        return true  
+        return true;
     }
+
     async prepare() {
         Juice.install(LanguageModule);
         Juice.register(ColoredConsoleLogger);
+
+        //Juice services
+        Juice.install(Networking);
+
+        //Local services
+        Juice.install(VolunteerService);
         return true;
-     }
+    }
+
     async ready(): Promise<any> {
-        const networking =Juice.service<Networking>("networking");
+        const networking = Juice.service<Networking>("networking");
+
         await networking.deployRoute("/api", new ApiRouteHandler());
+
+        const log = Juice.service<Logging>("juice:logging");
+        log.info("CK VOLUNTEER", "App ready");
+
         return true;
-      }
+    }
 }

@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "esnext",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "suppressImplicitAnyIndexErrors": false,
+        "declaration": false,
+        "watch": true,
+        "experimentalDecorators": true,
+        "useDefineForClassFields": false,
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -24,6 +24,24 @@ export class VolunteerController extends ExpressController {
         });
     }
 
+    @Post("/:page/:pageSize")
+    async fetch(req: express.Request, res: express.Response): Promise<express.Response> {
+        const page = Number(req.params.page);
+        const pageSize = Number(req.params.pageSize);
+        const options = req.body;
+        if (isNaN(page) || isNaN(pageSize) || pageSize < 1 || pageSize > 1000)
+            return res.send({ success: false, error: "INVALID_DATA" });
+
+        const result = await this.volunteers.provider.fetch([], page, pageSize, options);
+        return res.send({
+            success: true,
+            payload: {
+                count: result.count,
+                items: result.toModel()
+            }
+        })
+    }
+
     @Post("/")
     async create(req: express.Request, res: express.Response): Promise<express.Response> {
         if (!req.body)

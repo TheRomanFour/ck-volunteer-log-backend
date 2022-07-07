@@ -10,8 +10,8 @@ process.on('uncaughtException', (e) => {
     console.error(e);
     
 });
-
-const db = { connectionString: "mongodb://localhost:27017/ck-volunteers" };
+//EmrcGTjmvpXsj6C  sifra za cluster
+const db = { connectionString: "mongodb+srv://Cpt_Shime:EmrcGTjmvpXsj6C@ck-cluster.jk18p.mongodb.net/?retryWrites=true&w=majority" };
 Juice.init().connect(db).start(VolunteerLog).then(res => {
 
 });

@@ -32,8 +32,9 @@ export class VolunteerService extends EntityService {
         entity.salutation = data.salutation; //Mr || Mrs
         if (data.attributes && data.attributes.dateOfBirth)
             data.attributes.dateOfBirth = new Date(data.attributes.dateOfBirth); //Format Example: 2022, 0, 1 -> 1.1.2022
-        entity.attributes = data.attributes; //In this JSON you can write anything (for example date of birth)
 
+        //entity.attributes = data.attributes; //In this JSON you can write anything (for example date of birth)
+        entity.attributes = {oib: data.oib};
         await entity.save(); //Save new entity to database
 
         const mEntity = new ManagedEntity(entity);
@@ -74,6 +75,7 @@ type VolunteerFormData = {
     lastname: string,
     email?: string,
     phone?: string,
+    oib : string;
     salutation?: string,
     attributes?: any,
     address?: AddressFormData

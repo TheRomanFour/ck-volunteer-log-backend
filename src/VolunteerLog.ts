@@ -7,6 +7,7 @@ import { Networking } from "@juice/networking/Networking";
 import { ApiRouteHandler } from './modules/ApiRouteHandler';
 import { Logging } from "@juice/juice/modules/logging/Logging";
 import { VolunteerService } from "./services/volunteer/VolunteerService";
+import {EducationService} from "./services/education/EducationService";
 
 @ApplicationConfiguration({
     key: "ck-volunteer",
@@ -28,9 +29,9 @@ export class VolunteerLog implements IJuiceApplication {
 
         //Juice services
         Juice.install(Networking);
-
         //Local services
         Juice.install(VolunteerService);
+        Juice.install(EducationService);
         return true;
     }
 

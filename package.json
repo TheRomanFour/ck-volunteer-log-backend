@@ -25,6 +25,7 @@
     "@juice/entities": "^3.1.4",
     "@juice/juice": "^1.4.18",
     "@juice/networking": "^2.3.3",
+    "@juice/users": "^3.5.0",
     "@types/mongodb": "^3.6.20"
   }
 }

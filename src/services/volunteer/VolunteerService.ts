@@ -49,6 +49,8 @@ export class VolunteerService extends EntityService {
         if (!entity || !entity._id)
             return new Result(false, "MISSING_ENTITY");
 
+        data.attributes = { ...data.attributes, oib: data.oib };
+
         const result = await entity.update(data);
         if (!result.success)
             return result;
@@ -64,6 +66,20 @@ export class VolunteerService extends EntityService {
         const result = await entity.deleteEntity();
         if (!result.success)
             return result;
+
+        return new Result();
+    }
+
+    async addEducation(_id: ObjectId, education_id: ObjectId): Promise<Result<Entity>> {
+        const entity = await this.provider.fetchById(_id);
+        if (!entity || !entity._id)
+            return new Result(false, "MISSING_ENTITY");
+
+        const educations: ObjectId[] = entity.model.attributes?.educations ?? [];
+        if (educations.findIndex(eId => eId.equals(education_id) < 0))
+            educations.push(education_id);
+
+        await entity.setAttribute("educations", educations);
 
         return new Result();
     }

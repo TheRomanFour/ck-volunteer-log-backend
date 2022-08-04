@@ -7,7 +7,7 @@ import { Networking } from "@juice/networking/Networking";
 import { ApiRouteHandler } from './modules/ApiRouteHandler';
 import { Logging } from "@juice/juice/modules/logging/Logging";
 import { VolunteerService } from "./services/volunteer/VolunteerService";
-import {EducationService} from "./services/education/EducationService";
+import { EducationService } from "./services/education/EducationService";
 
 @ApplicationConfiguration({
     key: "ck-volunteer",

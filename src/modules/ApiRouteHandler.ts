@@ -2,7 +2,7 @@ import { IRouteHandler } from "@juice/networking/routes/IRouteHandler";
 import { ExpressRouter } from "sunset-express-rc/lib/ExpressRouter";
 import * as cors from "cors";
 import { VolunteerController } from "./controllers/VolunteerController";
-import {EducationController} from "./controllers/EducationController";
+import { EducationController } from "./controllers/EducationController";
 
 export class ApiRouteHandler implements IRouteHandler {
 

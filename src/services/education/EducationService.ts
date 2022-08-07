@@ -26,6 +26,11 @@ export class EducationService implements IService {
         const mEducation = new ManagedEducation();
 
         mEducation.model.name = data.name;
+        mEducation.model.date_from = data.date_from;
+        mEducation.model.date_to = data.date_to;
+        mEducation.model.location = data.location;
+        mEducation.model.start_time = data.start_time;
+        mEducation.model.maximum_participants = data.maximum_participants;
 
         await mEducation.save();
 
@@ -33,6 +38,15 @@ export class EducationService implements IService {
     }
 
     async update(_id: ObjectId, data: any): Promise<Result<Education>> {
+
+        const entity = await this.provider.fetchById(_id);
+        if (!entity || !entity._id)
+            return new Result(false, "MISSING_ENTITY");
+
+        const result = await entity.update(data);
+        if (!result.success)
+            return result;
+
         return new Result();
     }
 

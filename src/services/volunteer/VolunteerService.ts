@@ -34,6 +34,10 @@ export class VolunteerService extends EntityService {
             data.attributes.dateOfBirth = new Date(data.attributes.dateOfBirth); //Format Example: 2022, 0, 1 -> 1.1.2022
 
         //entity.attributes = data.attributes; //In this JSON you can write anything (for example date of birth)
+
+        // Imas atribute addresses na Entity-u pa njega mozes koristit
+        // entity.addresses = [];
+        // Samo pogledaj kako izgleda objek pa ga takvog posalji s frontenda
         entity.attributes = {oib: data.oib, skills:data.skills, address:data.address, place_of_birth:data.place_of_birth, };
         await entity.save(); //Save new entity to database
 

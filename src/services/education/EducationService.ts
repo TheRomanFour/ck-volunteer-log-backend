@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb";
 import { ManagedEducation } from "./managed/ManagedEducation";
 import { Education } from "./model/Education";
 import { Options } from "@juice/juice/core/provider/IProvider";
+import {EducationController} from "../../modules/controllers/EducationController";
 
 @ServiceConfiguration({
     key: "ck-volunteer:educations",
@@ -38,14 +39,13 @@ export class EducationService implements IService {
     }
 
     async update(_id: ObjectId, data: any): Promise<Result<Education>> {
-
         // Ovo ti nije dobro jer Education nije Entity nego je Education
         // Nemoj samo copy-paste sve nego malo promisli prije nego samo nesto pokupis
-        const entity = await this.provider.fetchById(_id);
-        if (!entity || !entity._id)
+        const Education = await this.provider.fetchById(_id);
+        if (!Education || !Education._id)
             return new Result(false, "MISSING_ENTITY");
 
-        const result = await entity.update(data);
+        const result = await Education.update(data);
         if (!result.success)
             return result;
 

@@ -5,7 +5,7 @@ import { IEntityProvider } from "@juice/entities/provider/IEntityProvider";
 import { Result } from "@juice/juice/types/Result";
 import { Entity } from "@juice/entities/models/Entity";
 import { ObjectId } from "mongodb";
-import { AddressFormData } from "@juice/entities/models/Address";
+import {Address, AddressFormData} from "@juice/entities/models/Address";
 
 @ServiceConfiguration({
     key: "ck-volunteer:volunteers",
@@ -30,16 +30,19 @@ export class VolunteerService extends EntityService {
         entity.email = data.email;
         entity.phone = data.phone;
         entity.salutation = data.salutation; //Mr || Mrs
-        if (data.attributes && data.attributes.dateOfBirth)
-            data.attributes.dateOfBirth = new Date(data.attributes.dateOfBirth); //Format Example: 2022, 0, 1 -> 1.1.2022
 
         //entity.attributes = data.attributes; //In this JSON you can write anything (for example date of birth)
-
         // Imas atribute addresses na Entity-u pa njega mozes koristit
-        // entity.addresses = [];
+        entity.addresses = []
+
+        if (data.attributes && data.attributes.dateOfBirth)
+            data.attributes.dateOfBirth = new Date(data.attributes.dateOfBirth); //Format Example: 2022, 0, 1 -> 1.1.2022
         // Samo pogledaj kako izgleda objek pa ga takvog posalji s frontenda
-        entity.attributes = {oib: data.oib, skills:data.skills, address:data.address, place_of_birth:data.place_of_birth, };
+        entity.attributes = {oib: data.oib, skills:data.skills, place_of_birth:data.place_of_birth, date_of_birth: data.date_of_birth};
+
+
         await entity.save(); //Save new entity to database
+
 
         const mEntity = new ManagedEntity(entity);
         if (data.address)
@@ -75,15 +78,15 @@ export class VolunteerService extends EntityService {
     }
 
     async addEducation(_id: ObjectId, education_id: ObjectId): Promise<Result<Entity>> {
-        const entity = await this.provider.fetchById(_id);
-        if (!entity || !entity._id)
+        const Education = await this.provider.fetchById(_id);
+        if (!Education || !Education._id)
             return new Result(false, "MISSING_ENTITY");
 
-        const educations: ObjectId[] = entity.model.attributes?.educations ?? [];
+        const educations: ObjectId[] = Education.model.attributes?.educations ?? [];
         if (educations.findIndex(eId => eId.equals(education_id) < 0))
             educations.push(education_id);
 
-        await entity.setAttribute("educations", educations);
+        await Education.setAttribute("educations", educations);
 
         return new Result();
     }
@@ -97,6 +100,7 @@ type VolunteerFormData = {
     phone?: string,
     oib : string;
     place_of_birth: string;
+    date_of_birth: string;
     skills?: string;
     salutation?: string,
     attributes?: any,

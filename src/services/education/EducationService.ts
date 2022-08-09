@@ -6,7 +6,6 @@ import { ObjectId } from "mongodb";
 import { ManagedEducation } from "./managed/ManagedEducation";
 import { Education } from "./model/Education";
 import { Options } from "@juice/juice/core/provider/IProvider";
-import {EducationController} from "../../modules/controllers/EducationController";
 
 @ServiceConfiguration({
     key: "ck-volunteer:educations",
@@ -38,9 +37,24 @@ export class EducationService implements IService {
         return new Result<ObjectId>(mEducation._id);
     }
 
+
+
+    async fetch(page: number, pageSize: number, options?: Options): Promise<FetchResult<Education>> {
+        const result = await this.provider.fetch([], page, pageSize, options);
+
+        return new Result({ count: result.count, items: result.toModel() });
+    }
+
+    async fetchById(_id: ObjectId): Promise<Result<Education>> {
+        const result = await this.provider.fetchById(_id);
+        if (!result)
+            return new Result(false, "MISSING_EDUCATION");
+
+        return new Result(result.model);
+    }
+
+
     async update(_id: ObjectId, data: any): Promise<Result<Education>> {
-        // Ovo ti nije dobro jer Education nije Entity nego je Education
-        // Nemoj samo copy-paste sve nego malo promisli prije nego samo nesto pokupis
         const Education = await this.provider.fetchById(_id);
         if (!Education || !Education._id)
             return new Result(false, "MISSING_ENTITY");
@@ -52,23 +66,19 @@ export class EducationService implements IService {
         return new Result();
     }
 
-    async delete(_id: ObjectId): Promise<Result> {
+    async delete(_id: ObjectId): Promise<Result<any>> {
+
+        const Education = await this.provider.fetchById(_id);
+        if (!Education || !Education._id)
+            return new Result(false, "MISSING_ENTITY");
+
+        const result = await Education.delete();
+        if (!result != true)
+            return ;
 
         return new Result();
     }
 
-    async fetchById(_id: ObjectId): Promise<Result<Education>> {
-        const result = await this.provider.fetchById(_id);
-        if (!result)
-            return new Result(false, "MISSING_EDUCATION");
 
-        return new Result(result.model);
-    }
-
-    async fetch(page: number, pageSize: number, options?: Options): Promise<FetchResult<Education>> {
-        const result = await this.provider.fetch([], page, pageSize, options);
-
-        return new Result({ count: result.count, items: result.toModel() });
-    }
 
 }

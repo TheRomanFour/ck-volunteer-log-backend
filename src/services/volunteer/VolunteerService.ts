@@ -32,12 +32,10 @@ export class VolunteerService extends EntityService {
         entity.salutation = data.salutation; //Mr || Mrs
 
         //entity.attributes = data.attributes; //In this JSON you can write anything (for example date of birth)
-        // Imas atribute addresses na Entity-u pa njega mozes koristit
         entity.addresses = []
 
         if (data.attributes && data.attributes.dateOfBirth)
             data.attributes.dateOfBirth = new Date(data.attributes.dateOfBirth); //Format Example: 2022, 0, 1 -> 1.1.2022
-        // Samo pogledaj kako izgleda objek pa ga takvog posalji s frontenda
         entity.attributes = {oib: data.oib, skills:data.skills, place_of_birth:data.place_of_birth, date_of_birth: data.date_of_birth};
 
 

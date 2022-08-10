@@ -66,8 +66,7 @@ export class EducationService implements IService {
         return new Result();
     }
 
-    async delete(_id: ObjectId): Promise<Result<any>> {
-
+    async delete(_id: ObjectId): Promise<Result> {
         const Education = await this.provider.fetchById(_id);
         if (!Education || !Education._id)
             return new Result(false, "MISSING_ENTITY");
@@ -75,7 +74,6 @@ export class EducationService implements IService {
         const result = await Education.delete();
         if (!result != true)
             return ;
-
         return new Result();
     }
 

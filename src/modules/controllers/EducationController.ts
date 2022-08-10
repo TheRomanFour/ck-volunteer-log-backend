@@ -50,7 +50,6 @@ export class EducationController extends ExpressController {
         const result = await this.educations.delete(new ObjectId(req.params.id));
         return res.send(result);
     }
-
     @Put("/:id")
     async update(req: express.Request, res: express.Response): Promise<express.Response> {
         if (!ObjectId.isValid(req.params.id) || !req.body)

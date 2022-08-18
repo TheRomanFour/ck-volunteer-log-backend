@@ -31,6 +31,7 @@ export class EducationService implements IService {
         mEducation.model.location = data.location;
         mEducation.model.start_time = data.start_time;
         mEducation.model.maximum_participants = data.maximum_participants;
+        mEducation.model.description = data.description;
 
         await mEducation.save();
 

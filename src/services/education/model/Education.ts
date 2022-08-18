@@ -11,6 +11,6 @@ export class Education extends Model {
     start_time?: string; //09:00
     type?: string;
     attributes?: any;
-
     maximum_participants?: number;
+    description?: string;
 }

@@ -54,8 +54,9 @@ export class VolunteerService extends EntityService {
         if (!entity || !entity._id)
             return new Result(false, "MISSING_ENTITY");
 
-        data.attributes = { ...data.attributes, oib: data.oib };
-
+        data.attributes = { ...data.attributes, oib: data.oib, skills:data.skills, place_of_birth:data.place_of_birth, date_of_birth: data.date_of_birth };
+        //TODO : Update addrese ne radi
+        data.address
         const result = await entity.update(data);
         if (!result.success)
             return result;

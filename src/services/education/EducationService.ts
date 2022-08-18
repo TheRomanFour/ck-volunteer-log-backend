@@ -62,7 +62,8 @@ export class EducationService implements IService {
 
         const result = await Education.update(data);
         if (!result.success)
-            return result;
+            return new Result(false);
+
 
         return new Result();
     }

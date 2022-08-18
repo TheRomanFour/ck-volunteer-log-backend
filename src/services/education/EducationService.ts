@@ -72,8 +72,9 @@ export class EducationService implements IService {
             return new Result(false, "MISSING_ENTITY");
 
         const result = await Education.delete();
-        if (!result != true)
-            return ;
+        if (!result)
+            return new Result(false);
+
         return new Result();
     }
 

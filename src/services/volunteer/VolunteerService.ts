@@ -5,7 +5,7 @@ import { IEntityProvider } from "@juice/entities/provider/IEntityProvider";
 import { Result } from "@juice/juice/types/Result";
 import { Entity } from "@juice/entities/models/Entity";
 import { ObjectId } from "mongodb";
-import {Address, AddressFormData} from "@juice/entities/models/Address";
+import {AddressFormData} from "@juice/entities/models/Address";
 
 @ServiceConfiguration({
     key: "ck-volunteer:volunteers",
@@ -56,8 +56,11 @@ export class VolunteerService extends EntityService {
 
         data.attributes = { ...data.attributes, oib: data.oib, skills:data.skills, place_of_birth:data.place_of_birth, date_of_birth: data.date_of_birth };
         //TODO : Update addrese ne radi
-        data.address
-        const result = await entity.update(data);
+        if (data.address){
+            await this.updateAddress(_id, data.address)
+
+        }
+        const result = await entity.update(data)
         if (!result.success)
             return result;
 

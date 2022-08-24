@@ -3,6 +3,7 @@ import * as express from "express";
 import { Inject } from "@juice/juice/core/decorators/Inject";
 import { VolunteerService } from "../../services/volunteer/VolunteerService";
 import { ObjectId } from "mongodb";
+import { Education } from "../../services/education/model/Education";
 
 export class VolunteerController extends ExpressController {
 
@@ -18,13 +19,18 @@ export class VolunteerController extends ExpressController {
         if (!result || !result._id)
             return res.send({ success: false, error: "MISSING_VOLUNTEER" });
 
+        if (result.model.attributes?.education_ids?.length) {
+            const educations = await Education.find<Education>({ _id: { $in: result.model.attributes.education_ids } }).toArray();
+            result.model.attributes.educations = educations;
+        }
+
         return res.send({
             success: true,
             payload: result.model
         });
     }
 
-    @Post("/:page/:pageSize")
+    @Post("/:page/:pageSize/:term?")
     async fetch(req: express.Request, res: express.Response): Promise<express.Response> {
         const page = Number(req.params.page);
         const pageSize = Number(req.params.pageSize);
@@ -32,14 +38,25 @@ export class VolunteerController extends ExpressController {
         if (isNaN(page) || isNaN(pageSize) || pageSize < 1 || pageSize > 1000)
             return res.send({ success: false, error: "INVALID_DATA" });
 
-        const result = await this.volunteers.provider.fetch([], page, pageSize, options);
+        const query = req.params.term
+            ? [{
+                $match: {
+                    $or: [
+                        { email: new RegExp(req.params.term, "i") },
+                        { firstname: new RegExp(req.params.term, "i") },
+                        { lastname: new RegExp(req.params.term, "i") }
+                    ]
+                }
+            }]
+            : [];
+        const result = await this.volunteers.provider.fetch(query, page, pageSize, options);
         return res.send({
             success: true,
             payload: {
                 count: result.count,
                 items: result.toModel()
             }
-        })
+        });
     }
 
     @Post("/")

@@ -5,7 +5,7 @@ import { IEntityProvider } from "@juice/entities/provider/IEntityProvider";
 import { Result } from "@juice/juice/types/Result";
 import { Entity } from "@juice/entities/models/Entity";
 import { ObjectId } from "mongodb";
-import {AddressFormData} from "@juice/entities/models/Address";
+import { AddressFormData } from "@juice/entities/models/Address";
 
 @ServiceConfiguration({
     key: "ck-volunteer:volunteers",
@@ -32,11 +32,16 @@ export class VolunteerService extends EntityService {
         entity.salutation = data.salutation; //Mr || Mrs
 
         //entity.attributes = data.attributes; //In this JSON you can write anything (for example date of birth)
-        entity.addresses = []
+        entity.addresses = [];
 
         if (data.attributes && data.attributes.dateOfBirth)
             data.attributes.dateOfBirth = new Date(data.attributes.dateOfBirth); //Format Example: 2022, 0, 1 -> 1.1.2022
-        entity.attributes = {oib: data.oib, skills:data.skills, place_of_birth:data.place_of_birth, date_of_birth: data.date_of_birth};
+        entity.attributes = {
+            oib: data.oib,
+            skills: data.skills,
+            place_of_birth: data.place_of_birth,
+            date_of_birth: data.date_of_birth
+        };
 
 
         await entity.save(); //Save new entity to database
@@ -54,15 +59,22 @@ export class VolunteerService extends EntityService {
         if (!entity || !entity._id)
             return new Result(false, "MISSING_ENTITY");
 
-        data.attributes = { ...data.attributes, oib: data.oib, skills:data.skills, place_of_birth:data.place_of_birth, date_of_birth: data.date_of_birth };
-        //TODO : Update addrese ne radi
-        if (data.address){
-            await this.updateAddress(_id, data.address)
+        data.attributes = {
+            ...data.attributes,
+            oib: data.oib,
+            skills: data.skills,
+            place_of_birth: data.place_of_birth,
+            date_of_birth: data.date_of_birth
+        };
 
-        }
-        const result = await entity.update(data)
+        const tempAddress = { ...data.address };
+        delete data.address;
+
+        const result = await entity.update(data);
         if (!result.success)
             return result;
+
+        await this.updateAddress(_id, tempAddress);
 
         return new Result();
     }
@@ -80,15 +92,15 @@ export class VolunteerService extends EntityService {
     }
 
     async addEducation(_id: ObjectId, education_id: ObjectId): Promise<Result<Entity>> {
-        const Education = await this.provider.fetchById(_id);
-        if (!Education || !Education._id)
+        const volunteer = await this.provider.fetchById(_id);
+        if (!volunteer || !volunteer._id)
             return new Result(false, "MISSING_ENTITY");
 
-        const educations: ObjectId[] = Education.model.attributes?.educations ?? [];
+        const educations: ObjectId[] = volunteer.model.attributes?.education_ids ?? [];
         if (educations.findIndex(eId => eId.equals(education_id) < 0))
             educations.push(education_id);
 
-        await Education.setAttribute("educations", educations);
+        await volunteer.setAttribute("education_ids", educations);
 
         return new Result();
     }
@@ -100,7 +112,7 @@ type VolunteerFormData = {
     lastname: string,
     email?: string,
     phone?: string,
-    oib : string;
+    oib: string;
     place_of_birth: string;
     date_of_birth: string;
     skills?: string;

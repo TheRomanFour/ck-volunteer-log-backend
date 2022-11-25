@@ -26,6 +26,7 @@ export class EducationController extends ExpressController {
         //Validate mandatory data
         const result = await this.educations.create(req.body);
         return res.send(result);
+
     }
 
     @Post("/:page/:pageSize")

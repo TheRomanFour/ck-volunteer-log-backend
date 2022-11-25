@@ -6,6 +6,24 @@ import { ManagedCollection } from "@juice/juice/core/managed/ManagedCollection";
 
 export class EducationProvider extends AProvider<ManagedEducation, Education> {
 
+
+    async fetchById(id, options?: any): Promise<ManagedEducation> {
+        const fields: any = {};
+        if (options?.fields) {
+            options.fields.forEach(f => {
+                fields[f] = true;
+            });
+        }
+
+        let education: any = await Education.findOne<Education>({ _id: id }, { projection: fields });
+        if (!education)
+            return null;
+
+        education = new ManagedEducation(education);
+        return education;
+    }
+
+
     async fetch(query: any, page: number, pageSize: number, options?: Options | undefined): Promise<ManagedCollection<ManagedEducation, Education>> {
         const fields: any = {};
         if (options && options.fields) {
@@ -14,18 +32,15 @@ export class EducationProvider extends AProvider<ManagedEducation, Education> {
             });
             query.push({ $project: fields });
         }
-
         //filter
         if (options?.filter?.length)
             query.push(...this.prepareFilter(options.filter))
-
         //sort
         if (options && options.sort) {
             const sort = {};
             sort[options.sort.prop] = options.sort.dir === 'asc' ? 1 : -1;
             query.push({ $sort: sort });
         }
-
         //count
         query.push({
             $group: { _id: null, count: { $sum: 1 } }
@@ -48,21 +63,7 @@ export class EducationProvider extends AProvider<ManagedEducation, Education> {
         return educationsSet;
     }
 
-    async fetchById(id, options?: any): Promise<ManagedEducation> {
-        const fields: any = {};
-        if (options?.fields) {
-            options.fields.forEach(f => {
-                fields[f] = true;
-            });
-        }
 
-        let education: any = await Education.findOne<Education>({ _id: id }, { projection: fields });
-        if (!education)
-            return null;
-
-        education = new ManagedEducation(education);
-        return education;
-    }
 
     fetchMeta(query: Array<any>, page: number | undefined, pageSize: number | undefined): Promise<any> {
         return Promise.resolve(undefined);

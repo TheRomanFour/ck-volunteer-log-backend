@@ -31,7 +31,8 @@ export class VolunteerService extends EntityService {
         entity.phone = data.phone;
         entity.salutation = data.salutation; //Mr || Mrs
 
-        //entity.attributes = data.attributes; //In this JSON you can write anything (for example date of birth)
+        //entity.attributes = data.attributes; //In this JSON you can write anything (for example date of birth, equipment size)
+    
         entity.addresses = [];
 
         if (data.attributes && data.attributes.dateOfBirth)

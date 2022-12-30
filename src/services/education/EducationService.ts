@@ -32,6 +32,7 @@ export class EducationService implements IService {
         mEducation.model.start_time = data.start_time;
         mEducation.model.maximum_participants = data.maximum_participants;
         mEducation.model.description = data.description;
+        mEducation.model.type = data.type;
 
         await mEducation.save();
 
@@ -56,24 +57,23 @@ export class EducationService implements IService {
 
 
     async update(_id: ObjectId, data: any): Promise<Result<Education>> {
-        const Education = await this.provider.fetchById(_id);
-        if (!Education || !Education._id)
-            return new Result(false, "MISSING_ENTITY");
+        const education = await this.provider.fetchById(_id);
+        if (!education?._id)
+            return new Result(false, "MISSING_EDUCATION");
 
-        const result = await Education.update(data);
-        if (!result.success)
+        const result = await education.update(data);
+        if (!result?.success)
             return new Result(false);
-
 
         return new Result();
     }
 
     async delete(_id: ObjectId): Promise<Result> {
-        const Education = await this.provider.fetchById(_id);
-        if (!Education || !Education._id)
-            return new Result(false, "MISSING_ENTITY");
+        const education = await this.provider.fetchById(_id);
+        if (!education?._id)
+            return new Result(false, "MISSING_EDUCATION");
 
-        const result = await Education.delete();
+        const result = await education.delete();
         if (!result)
             return new Result(false);
 

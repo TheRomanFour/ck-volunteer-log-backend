@@ -4,7 +4,8 @@
   "description": "",
   "main": "bin/serve.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node bin/serve.js"
   },
   "repository": {
     "type": "git",

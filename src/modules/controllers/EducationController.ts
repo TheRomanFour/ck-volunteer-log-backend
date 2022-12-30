@@ -55,6 +55,7 @@ export class EducationController extends ExpressController {
     async update(req: express.Request, res: express.Response): Promise<express.Response> {
         if (!ObjectId.isValid(req.params.id) || !req.body)
             return res.send({ success: false, error: "INVALID_DATA" });
+
         const result = await this.educations.update(new ObjectId(req.params.id), req.body);
         return res.send(result);
     }

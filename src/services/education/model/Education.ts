@@ -9,7 +9,7 @@ export class Education extends Model {
     location: string;
 
     start_time?: string; //09:00
-    type?: string;
+    type?: 'education' | 'training' | 'intervention';
     attributes?: any;
     maximum_participants?: number;
     description?: string;
